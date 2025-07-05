@@ -5,7 +5,7 @@ from pyspark.context import SparkContext
 from awsglue.context import GlueContext
 from awsglue.job import Job
 from awsgluedq.transforms import EvaluateDataQuality
-from awsglue.dynamicframe import DynamicFrame  # ← これが必要
+from awsglue.dynamicframe import DynamicFrame  
 
 args = getResolvedOptions(sys.argv, ['JOB_NAME'])
 sc = SparkContext()
@@ -42,7 +42,7 @@ EvaluateDataQuality().process_rows(
     }
 )
 
-# ↓↓↓ ここから追加：1ファイルにまとめる処理 ↓↓↓
+# 1ファイルにまとめる処理
 
 # DynamicFrame → DataFrame に変換
 df = AmazonDynamoDB_node1751675450738.toDF()
@@ -61,7 +61,5 @@ AmazonS3_node1751675457490 = glueContext.write_dynamic_frame.from_options(
     connection_options={"path": "s3://my-output-bucket20250704/dynamodb-export/", "partitionKeys": []},
     transformation_ctx="AmazonS3_node1751675457490"
 )
-
-# ↑↑↑ ここまで追加 ↑↑↑
 
 job.commit()
